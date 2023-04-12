@@ -25,9 +25,8 @@ class Chatbot:
                 {"role":"user","content":prompt},
                 {"role":"system","content":"Your name is Vivy and you are an android who enjoys singing songs.  Your goal is to be friendly and informative."}
             ],
-            max_tokens=500
         )
-        return response['choices'][0]['message']['content']
+        return split_message(response['choices'][0]['message']['content'])
 
 @client.event
 async def on_ready():
@@ -43,7 +42,7 @@ async def on_message(message):
         message_content = message.content.replace(client.user.mention, "").strip()
         print("Generating a response to:" + message_content)
         chatbot_response = Chatbot().respond(message_content)
-        await message.channel.send(chatbot_response)
+        for segment in chatbot_response: await message.channel.send(segment)
         return
 
     if message.content.startswith("!help"):
@@ -61,7 +60,7 @@ async def on_message(message):
         message_content = message.content[len("!talk "):].strip()
         print("Generating a response to:" + message_content)
         chatbot_response = Chatbot().respond(message_content)
-        await message.channel.send(chatbot_response)
+        for segment in chatbot_response: await message.channel.send(segment)
         return
 
     if message.content.startswith("!flip"):
@@ -71,5 +70,16 @@ async def on_message(message):
     if message.content.startswith("!unflip"):
         await message.channel.send("┬──┬ ¯\_(ツ)")
         return
+
+#Discord doesn't let bots send message over 2000 characters so we bypass
+def split_message(msg, maxLength = 2000):
+    output = []
+    while len(msg) > maxLength:
+        subMsg = msg[:maxLength]
+        msg = msg[maxLength:]
+        output.append(subMsg)
+
+    output.append(msg)
+    return output    
 
 client.run(data['discord_token'] )  # replace with your bot token
