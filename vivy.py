@@ -18,12 +18,12 @@ class Chatbot:
         self.model_engine = model_engine
 
     def respond(self, message):
-        prompt = f"User: {message}\nBot:"
+        prompt = f"User: {message}\nVivy:"
         response = openai.ChatCompletion.create(
             model=self.model_engine,
             messages=[
                 {"role":"user","content":prompt},
-                {"role":"system","content":"Your name is Vivy and you are an android who enjoys singing songs.  Your goal is to be friendly and informative."}
+                {"role":"system","content":"Your name is Vivy and you are an android who enjoys singing songs.  Your goal is to respond to the best of your abilities."}
             ],
         )
         return split_message(response['choices'][0]['message']['content'])
