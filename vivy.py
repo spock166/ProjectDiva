@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import discord
+from discord.ext import commands
 import openai
 
 f = open(os.path.join(sys.path[0],'bot_data.json'))
@@ -11,7 +12,7 @@ f.close()
 openai.api_key = data['openai_token']  # replace with your API key
 
 intents = discord.Intents(messages=True, guilds=True, message_content=True)
-client = discord.Client(intents=intents)
+client = discord.Bot(command_prefix = '!', intents=intents, help_command=commands.DefaultHelpCommand())
 
 class Chatbot:
     def __init__(self, model_engine="gpt-3.5-turbo"):
@@ -33,43 +34,21 @@ async def on_ready():
     print(f"Logged in as {client.user.name}")
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.listening, name="to the organics"))
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+@client.command(pass_context = True)
+async def talk(ctx):
+    message = ctx.message
+    message_content = message.content[len("!talk "):].strip()
+    print("Generating a response to:" + message_content)
+    chatbot_response = Chatbot().respond(message_content)
+    for segment in chatbot_response: await ctx.send(segment)
 
-    if str(client.user.id) in message.content:
-        message_content = message.content.replace(client.user.mention, "").strip()
-        print("Generating a response to:" + message_content)
-        chatbot_response = Chatbot().respond(message_content)
-        for segment in chatbot_response: await message.channel.send(segment)
-        return
+@client.command(pass_context = True)
+async def flip():
+    ctx.send("(╯°□°）╯︵ ┻━┻")
 
-    if message.content.startswith("!help"):
-        help_message = """
-        **Commands**
-        `!help`: Show this help message.
-        `!talk <message>`: Talk to the chatbot.
-        `!flip`: Flip a table.
-        `!unflip`: Unflip a table.
-        """
-        await message.channel.send(help_message)
-        return
-
-    if message.content.startswith("!talk"):
-        message_content = message.content[len("!talk "):].strip()
-        print("Generating a response to:" + message_content)
-        chatbot_response = Chatbot().respond(message_content)
-        for segment in chatbot_response: await message.channel.send(segment)
-        return
-
-    if message.content.startswith("!flip"):
-        await message.channel.send("(╯°□°）╯︵ ┻━┻")
-        return
-
-    if message.content.startswith("!unflip"):
-        await message.channel.send("┬──┬ ¯\_(ツ)")
-        return
+@client.command(pass_context = True)
+async def unflip():
+    ctx.send("┬──┬ ¯\_(ツ)")
 
 #Discord doesn't let bots send message over 2000 characters so we bypass
 def split_message(msg, maxLength = 2000):
