@@ -43,11 +43,11 @@ async def talk(ctx):
     for segment in chatbot_response: await ctx.send(segment)
 
 @client.command(pass_context = True)
-async def flip():
+async def flip(ctx):
     ctx.send("(╯°□°）╯︵ ┻━┻")
 
 @client.command(pass_context = True)
-async def unflip():
+async def unflip(ctx):
     ctx.send("┬──┬ ¯\_(ツ)")
 
 #Discord doesn't let bots send message over 2000 characters so we bypass
