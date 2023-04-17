@@ -12,7 +12,7 @@ f.close()
 openai.api_key = data['openai_token']  # replace with your API key
 
 intents = discord.Intents(messages=True, guilds=True, message_content=True)
-client = discord.Bot(command_prefix = '!', intents=intents, help_command=commands.DefaultHelpCommand())
+client = commands.Bot(command_prefix = '!', intents=intents, help_command=commands.DefaultHelpCommand())
 
 class Chatbot:
     def __init__(self, model_engine="gpt-3.5-turbo"):
