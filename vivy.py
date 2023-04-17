@@ -44,11 +44,11 @@ async def talk(ctx):
 
 @client.command(pass_context = True)
 async def flip(ctx):
-    ctx.send("(╯°□°）╯︵ ┻━┻")
+    await ctx.send("(╯°□°）╯︵ ┻━┻")
 
 @client.command(pass_context = True)
 async def unflip(ctx):
-    ctx.send("┬──┬ ¯\_(ツ)")
+    await ctx.send("┬──┬ ¯\_(ツ)")
 
 #Discord doesn't let bots send message over 2000 characters so we bypass
 def split_message(msg, maxLength = 2000):
