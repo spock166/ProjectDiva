@@ -7,7 +7,7 @@ A JSON file is used to store sensitive information such as API tokens and can be
 
 ```
 {
-  "discord_token" : "my_discord_token"
+  "discord_token" : "my_discord_token",
   "openai_token" : "my_openai_token"
 }
 ```
